@@ -1,0 +1,38 @@
+(Input Validation)
+
+<!-- webform.html -->
+<form action="/submit" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username">
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email">
+    
+    <button type="submit">Submit</button>
+</form>
+
+(Parameterized Qeuries)
+
+-- database.sql
+CREATE TABLE Users (
+    UserID INT PRIMARY KEY AUTO_INCREMENT,
+    Username VARCHAR(100),
+    Email VARCHAR(100)
+);
+
+(Test Framework Setup (Testing for Vulnerabilities))
+
+// Tests/TestInputValidation.cs
+using NUnit.Framework;
+[TestFixture]
+public class TestInputValidation {
+    [Test]
+    public void TestForSQLInjection() {
+        // Placeholder for SQL Injection test
+    }
+    [Test]
+    public void TestForXSS() {
+        // Placeholder for XSS test
+    }
+}
+
