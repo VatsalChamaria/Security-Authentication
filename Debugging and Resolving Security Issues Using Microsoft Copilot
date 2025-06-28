@@ -1,0 +1,52 @@
+using System;
+using MySql.Data.MySqlClient;
+
+class Program
+{
+    static void Main()
+    {
+        string connectionString = "server=localhost;user=root;password=yourpassword;database=yourdbname;";
+        
+        using var connection = new MySqlConnection(connectionString);
+
+        try
+        {
+            connection.Open();
+
+            // Create table if it doesn't exist
+            string createTable = @"
+                CREATE TABLE IF NOT EXISTS Users (
+                    UserID INT PRIMARY KEY AUTO_INCREMENT,
+                    Username VARCHAR(100),
+                    Email VARCHAR(100)
+                )";
+
+            using var createCmd = new MySqlCommand(createTable, connection);
+            createCmd.ExecuteNonQuery();
+            Console.WriteLine("✅ Table created or already exists.");
+
+            // Insert sample data
+            string insertUser = "INSERT INTO Users (Username, Email) VALUES (@username, @email)";
+            using var insertCmd = new MySqlCommand(insertUser, connection);
+            insertCmd.Parameters.AddWithValue("@username", "john_doe");
+            insertCmd.Parameters.AddWithValue("@email", "john@example.com");
+            insertCmd.ExecuteNonQuery();
+            Console.WriteLine("✅ User inserted.");
+
+            // Retrieve users
+            string selectQuery = "SELECT * FROM Users";
+            using var selectCmd = new MySqlCommand(selectQuery, connection);
+            using var reader = selectCmd.ExecuteReader();
+
+            Console.WriteLine("\n📋 Users in database:");
+            while (reader.Read())
+            {
+                Console.WriteLine($"- {reader["UserID"]}: {reader["Username"]} ({reader["Email"]})");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("❌ Error: " + ex.Message);
+        }
+    }
+}
